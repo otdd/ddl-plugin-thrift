@@ -60,9 +60,15 @@ public class SettingsUtil {
 			if("compact".equalsIgnoreCase(protocol)){
 				currentReqProtocolType = ThriftProtocolType.COMPACT;
 			}
+			else{
+				currentReqProtocolType = ThriftProtocolType.BINARY;
+			}
 			String transport = reqSettings.get("transport");
 			if("raw".equalsIgnoreCase(transport)){
 				currentReqTransportType = ThriftTransportType.RAW;
+			}
+			else{
+				currentReqTransportType = ThriftTransportType.FRAMED;
 			}
 		}
 		if(respSettings!=null){
@@ -70,9 +76,15 @@ public class SettingsUtil {
 			if("compact".equalsIgnoreCase(protocol)){
 				currentRespProtocolType = ThriftProtocolType.COMPACT;
 			}
+			else{
+				currentRespProtocolType = ThriftProtocolType.BINARY;
+			}
 			String transport = respSettings.get("transport");
 			if("raw".equalsIgnoreCase(transport)){
 				currentRespTransportType = ThriftTransportType.RAW;
+			}
+			else{
+				currentRespTransportType = ThriftTransportType.FRAMED;
 			}
 		}
 	}
