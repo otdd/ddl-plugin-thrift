@@ -4,10 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Map;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
@@ -19,6 +23,8 @@ import io.otdd.ddl.thrift.grammar.ThriftLexer;
 import io.otdd.ddl.thrift.grammar.ThriftParser;
 
 public class ThriftDDLEncoder implements DDLEncoder {
+
+	private static final Logger LOG = LogManager.getLogger();
 
 	public ThriftDDLEncoder(){
 	}
@@ -35,8 +41,16 @@ public class ThriftDDLEncoder implements DDLEncoder {
 					SettingsUtil.getProtoType(SettingsUtil.Type.REQ,protocolSettings),
 					SettingsUtil.getTransType(SettingsUtil.Type.REQ,protocolSettings));
 			parser.addParseListener(listener);
+			ErrListener errorListener = new ErrListener();
+			parser.addErrorListener(errorListener);
 			parser.response(); // begin parsing at rule 'response'
-			return listener.getBytes();
+			if(errorListener.hasErr){
+				LOG.error("syntaxError");
+				return null;
+			}
+			else{
+				return listener.getBytes();
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -64,10 +78,32 @@ public class ThriftDDLEncoder implements DDLEncoder {
 		}
 		return null;
 	}
-	
+
+	class ErrListener implements ANTLRErrorListener{
+
+		public boolean hasErr = false;
+
+		@Override
+		public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
+			hasErr = true;
+		}
+		@Override
+		public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
+		}
+		@Override
+		public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
+		}
+		@Override
+		public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
+		}
+	}
+
 	public static void main(String args[]){
 		ThriftDDLEncoder encoder = new ThriftDDLEncoder();
-		String reqddl = "test:{ 1<string>:\"805\", 2<struct>:{ 1<i32>:1, 2<string>:\"data\", 3<string>:\"opt data\"} }";
+//		String reqddl = "test:{ 1<string>:\"805\", 2<struct>:{ 1<i32>:1, 2<string>:\"data\", 3<string>:\"opt data\"} }";
+		String reqddl = "[request-line]\n" +
+				"GET /reviews/0 HTTP/1.1";
+
 		byte[] req = encoder.encodeRequest(reqddl,null);
 		System.out.println(Arrays.toString(req));
 		System.out.println(new String(req));
@@ -79,3 +115,4 @@ public class ThriftDDLEncoder implements DDLEncoder {
 	}
 
 }
+
