@@ -44,6 +44,10 @@ public class ThriftDDLCodecFactoryPlugin extends Plugin {
 			return "thrift/0.10.0";
 		}
 
+		public String getPluginVersion() {
+			return "0.1.0";
+		}
+
 		public boolean init(Map<String,String> reqProtocolSettings,
 				Map<String,String> respProtocolSettings) {
 			SettingsUtil.setDefaultSettings(reqProtocolSettings,respProtocolSettings);
