@@ -4,7 +4,7 @@
 
 	<groupId>io.otdd.ddl</groupId>
 	<artifactId>ddl-plugin-thrift</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
 
@@ -100,9 +100,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<plugin.id>ddl-thrift-plugin-0.10.0</plugin.id>
+		<plugin.id>ddl-thrift-plugin-0.1.0</plugin.id>
 		<plugin.class>io.otdd.ddl.thrift.ThriftDDLCodecFactoryPlugin</plugin.class>
-		<plugin.version>0.0.1</plugin.version>
+		<plugin.version>0.1.0</plugin.version>
 		<plugin.provider>otdd</plugin.provider>
 		<plugin.dependencies />
 	</properties>
@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>io.otdd.ddl</groupId>
 			<artifactId>ddl-plugin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
