@@ -41,7 +41,7 @@ public class ThriftDDLCodecFactoryPlugin extends Plugin {
 		}
 
 		public String getPluginName() {
-			return "otdd official thrift plugin";
+			return "otdd thrift plugin";
 		}
 
 		public String getPluginVersion() {
